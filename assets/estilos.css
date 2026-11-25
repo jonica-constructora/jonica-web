@@ -1,0 +1,1212 @@
+/* ============================================================================
+   JÓNICA CONSTRUCTORA — sistema visual
+   ----------------------------------------------------------------------------
+   Dos colores de marca (terracota y crema) y un tercero derivado, la umbría,
+   para los bloques de anclaje. La firma de la página es la COTA: la línea de
+   medición de un plano —tope, raya, tope— que encabeza cada sección. No es
+   adorno: la promesa de la empresa es que el precio no se mueve porque todo
+   está medido, y ese es el signo que lo dice.
+
+   Tipografía: Palatino para los titulares (viene de las capitales romanas, que
+   es de donde viene también el nombre de la empresa y la ciudad donde trabaja),
+   Century Gothic —la letra de la marca— solo en rótulos y cifras, y Segoe UI
+   para leer.
+   ========================================================================= */
+
+:root{
+  --terracota:#6D392E;
+  --terracota-vivo:#8A4736;
+  --crema:#F2EDE4;
+  --cal:#FBF8F2;
+  --umbria:#241511;
+  --umbria-2:#38211A;
+  --bronce:#C08552;
+  --tinta:#2E2A26;
+  --tinta-sua:#6E6459;
+  --linea:rgba(109,57,46,.16);
+  --linea-clara:rgba(242,237,228,.16);
+  --wa:#1FA855;
+
+  --display:'Palatino Linotype','Book Antiqua',Palatino,'Iowan Old Style','Hoefler Text',Georgia,serif;
+  --util:'Century Gothic','Futura','Trebuchet MS','Segoe UI',sans-serif;
+  --texto:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+
+  --ancho:1220px;
+  --aire:clamp(72px,9vw,132px);
+  --curva:cubic-bezier(.16,1,.3,1);
+  --sombra:0 24px 60px -28px rgba(36,21,17,.45);
+}
+
+*,*::before,*::after{ box-sizing:border-box }
+
+/* El atributo `hidden` tiene que ganar siempre. El del navegador es
+   `[hidden]{display:none}` a secas, y cualquier regla nuestra con `display:flex`
+   o `display:grid` lo pisa por especificidad: el JavaScript ponía hidden, el
+   elemento seguía a la vista y parecía que el botón no había hecho nada. Pasaba
+   en los botones del formulario de contacto y en los campos del cotizador. */
+[hidden]{ display:none !important }
+
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100% }
+
+body{
+  margin:0;
+  background:var(--crema);
+  color:var(--tinta);
+  font:400 1.0625rem/1.72 var(--texto);
+  overflow-x:hidden;
+}
+
+/* `height:auto` no es opcional: sin él, los atributos width/height del HTML
+   fijan la altura en píxeles y cualquier `aspect-ratio` posterior se ignora. */
+img{ max-width:100%; height:auto; display:block }
+a{ color:inherit }
+h1,h2,h3,h4{ margin:0; font-family:var(--display); font-weight:400; line-height:1.08; letter-spacing:-.015em }
+p{ margin:0 0 1.1em }
+p:last-child{ margin-bottom:0 }
+ul{ margin:0; padding:0; list-style:none }
+
+.envoltura{ width:min(100% - 44px, var(--ancho)); margin-inline:auto }
+
+.solo-lectores{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
+}
+
+.saltar{
+  position:absolute; left:-999px; top:0; z-index:200;
+  background:var(--terracota); color:var(--crema);
+  padding:12px 20px; font:600 .9rem var(--texto);
+}
+.saltar:focus{ left:10px; top:10px }
+
+:focus-visible{ outline:2px solid var(--bronce); outline-offset:3px; border-radius:2px }
+
+/* ---------------------------------------------------------------- la cota */
+/* |———| El signo de medida. Delante de cada rótulo de sección. */
+.cota{
+  display:inline-flex; align-items:center; gap:14px;
+  font:400 .705rem/1 var(--util);
+  text-transform:uppercase; letter-spacing:.24em;
+  color:var(--terracota);
+}
+.cota::before{
+  content:''; flex:none; width:46px; height:9px;
+  border-left:1px solid currentColor; border-right:1px solid currentColor;
+  background:linear-gradient(currentColor,currentColor) center/100% 1px no-repeat;
+  transform-origin:left center;
+}
+.cota--claro{ color:var(--bronce) }
+
+/* ------------------------------------------------------------------ botón */
+.btn{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:16px 30px; border:0; border-radius:2px; cursor:pointer;
+  background:var(--terracota); color:var(--crema);
+  font:600 .875rem/1 var(--texto); letter-spacing:.03em;
+  text-decoration:none; text-align:center;
+  transition:color .35s var(--curva), transform .35s var(--curva), box-shadow .35s var(--curva);
+}
+.btn::before{
+  content:''; position:absolute; inset:0; z-index:-1;
+  background:var(--umbria);
+  transform:translateY(101%);
+  transition:transform .45s var(--curva);
+}
+.btn:hover{ transform:translateY(-2px); box-shadow:0 14px 28px -14px rgba(36,21,17,.6) }
+.btn:hover::before{ transform:translateY(0) }
+.btn svg{ width:18px; height:18px; fill:currentColor; flex:none }
+.btn--peq{ padding:12px 20px; font-size:.8rem }
+
+.btn--linea{ background:transparent; color:var(--terracota); box-shadow:inset 0 0 0 1px var(--terracota) }
+.btn--linea:hover{ color:var(--crema) }
+.btn--linea::before{ background:var(--terracota) }
+
+/* el mismo botón de contorno, para cuando el fondo es oscuro */
+.btn--claro{ background:transparent; color:var(--crema); box-shadow:inset 0 0 0 1px rgba(242,237,228,.55) }
+.btn--claro:hover{ color:var(--umbria) }
+.btn--claro::before{ background:var(--crema) }
+
+.btn--wa{ background:var(--wa); color:#fff }
+.btn--wa::before{ background:#17843f }
+
+.enlace-atras{
+  background:none; border:0; cursor:pointer; padding:8px 0;
+  font:600 .85rem var(--texto); color:var(--tinta-sua);
+  transition:color .25s;
+}
+.enlace-atras:hover{ color:var(--terracota) }
+.oculto{ display:none !important }
+
+/* ------------------------------------------------------------ barra superior */
+.barra-sup{
+  background:var(--umbria); color:rgba(242,237,228,.72);
+  font:400 .8rem var(--texto);
+}
+.barra-sup .envoltura{ display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:42px }
+.barra-sup__datos{ display:flex; gap:26px; flex-wrap:wrap }
+.barra-sup a{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; transition:color .25s }
+.barra-sup a:hover{ color:var(--bronce) }
+.barra-sup svg{ width:14px; height:14px; fill:currentColor; opacity:.7 }
+.barra-sup__redes{ display:flex; gap:6px }
+.barra-sup__redes a{ padding:5px }
+.barra-sup__redes svg{ width:15px; height:15px; opacity:.85 }
+
+/* ---------------------------------------------------------------- cabecera */
+.cabecera{
+  position:sticky; top:0; z-index:100;
+  background:rgba(242,237,228,.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;
+  transition:padding .4s var(--curva), background .4s, border-color .4s, box-shadow .4s;
+  padding:14px 0;
+}
+.cabecera.encogida{
+  padding:6px 0;
+  background:rgba(242,237,228,.97);
+  border-bottom-color:var(--linea);
+  box-shadow:0 10px 30px -24px rgba(36,21,17,.7);
+}
+.cabecera .envoltura{ display:flex; align-items:center; justify-content:space-between; gap:24px }
+
+.marca{ display:flex; align-items:center; gap:14px; text-decoration:none; color:var(--terracota) }
+.marca__mark{ width:60px; height:60px; object-fit:contain; transition:width .4s var(--curva), height .4s var(--curva) }
+.cabecera.encogida .marca__mark{ width:44px; height:44px }
+.marca__texto{ display:flex; flex-direction:column; line-height:1 }
+.marca__nombre{ font:400 1.42rem/1 var(--util); letter-spacing:.16em }
+.marca__bajada{ font:400 .62rem/1 var(--util); letter-spacing:.34em; color:var(--tinta-sua); margin-top:6px }
+
+.menu{ display:flex; align-items:center; gap:34px }
+/* `:not(.btn)` es imprescindible: el botón de llamada vive dentro del menú y
+   también apunta a #cotizador, así que recibe la clase .activo. Sin excluirlo,
+   su texto se pinta de terracota sobre fondo terracota y desaparece. */
+.menu a:not(.btn){
+  position:relative; text-decoration:none;
+  font:500 .875rem var(--texto); color:var(--tinta);
+  padding:6px 0; transition:color .28s;
+}
+.menu a:not(.btn)::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--terracota); transform:scaleX(0); transform-origin:right;
+  transition:transform .38s var(--curva);
+}
+.menu a:not(.btn):hover,.menu a:not(.btn).activo{ color:var(--terracota) }
+.menu a:not(.btn):hover::after,.menu a:not(.btn).activo::after{ transform:scaleX(1); transform-origin:left }
+
+.hamburguesa{
+  display:none; width:44px; height:44px; border:0; background:none; cursor:pointer;
+  position:relative;
+}
+.hamburguesa i,.hamburguesa i::before,.hamburguesa i::after{
+  position:absolute; left:11px; width:22px; height:2px; background:var(--terracota);
+  transition:transform .35s var(--curva), opacity .2s;
+}
+.hamburguesa i{ top:21px }
+.hamburguesa i::before{ content:''; left:0; top:-7px }
+.hamburguesa i::after{ content:''; left:0; top:7px }
+.hamburguesa[aria-expanded="true"] i{ background:transparent }
+.hamburguesa[aria-expanded="true"] i::before{ transform:translateY(7px) rotate(45deg) }
+.hamburguesa[aria-expanded="true"] i::after{ transform:translateY(-7px) rotate(-45deg) }
+
+/* ================================ PORTADA ================================ */
+/* Foto a toda página, el mensaje encima y el índice abajo. La foto va dentro de
+   un contenedor propio porque encima hacen dos movimientos a la vez: el
+   contenedor se acerca despacio y la imagen hace el paralaje. En el mismo
+   elemento se pisarían el `transform`. */
+.portada{
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  min-height:clamp(540px,86vh,840px);
+  padding-top:clamp(70px,12vh,130px);
+  background:var(--umbria); color:var(--crema);
+}
+.portada__foto{
+  position:absolute; inset:0;
+  animation:acercar 32s ease-in-out infinite alternate;
+}
+.portada__foto img{
+  width:100%; height:100%; object-fit:cover; object-position:center 58%;
+  will-change:transform;
+}
+@keyframes acercar{ from{ transform:scale(1) } to{ transform:scale(1.08) } }
+
+/* El velo se calibra CONTRA LA FOTO, no a ojo. La portada anterior era oscura
+   y aguantaba un velo del 88 %; con una foto clara de beige y terracota ese
+   mismo velo la dejaba marrón y se perdía justo lo que la hace acogedora.
+   Estos valores dejan el texto en 11:1 de contraste —hace falta 4,5:1— y la
+   foto se sigue viendo. Si algún día se cambia la foto, hay que volver a
+   medirlo: el script de simulación está en el scratchpad. */
+.portada__velo{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(102deg, rgba(22,12,9,.72) 0%, rgba(22,12,9,.5) 38%, rgba(22,12,9,.1) 68%, rgba(22,12,9,.2) 100%),
+    linear-gradient(0deg, rgba(22,12,9,.52) 0%, rgba(22,12,9,0) 46%);
+}
+
+.portada__caja{
+  position:relative; z-index:2;
+  max-width:660px; margin-right:auto;
+  padding-bottom:clamp(44px,6vw,78px);
+}
+
+.portada h1{ margin:26px 0 0 }
+.portada__sobre{
+  display:block; margin-bottom:20px;
+  font:500 .93rem/1.5 var(--texto); letter-spacing:.01em;
+  color:rgba(242,237,228,.64);
+}
+.portada__lema{
+  display:block; font-family:var(--display);
+  font-size:clamp(2.55rem,5.6vw,4.5rem); line-height:1.02; letter-spacing:-.028em;
+  color:var(--crema);
+  text-shadow:0 2px 34px rgba(18,9,7,.55);
+}
+.portada__lema em{ display:block; font-style:italic; color:var(--bronce) }
+.portada__parrafo{
+  margin:28px 0 0; max-width:50ch;
+  font-size:1.08rem; color:rgba(242,237,228,.82);
+}
+.portada__botones{ display:flex; flex-wrap:wrap; gap:14px; margin-top:34px }
+
+.sellos{ display:flex; flex-wrap:wrap; gap:10px 28px; margin-top:34px }
+.sellos li{
+  position:relative; padding-left:22px;
+  font:500 .8rem var(--util); letter-spacing:.06em; text-transform:uppercase;
+  color:rgba(242,237,228,.74);
+}
+.sellos li::before{
+  content:''; position:absolute; left:0; top:.5em;
+  width:9px; height:9px; border:1px solid var(--bronce); transform:rotate(45deg);
+}
+
+/* La nota de Mérida. Va en cursiva y con la tipografía de display, no con la
+   de texto: no es información de servicio como el párrafo de arriba, es la
+   declaración de intenciones de la casa y tiene que leerse en otro tono de
+   voz. El filete de la izquierda la separa de los sellos sin abrir un bloque
+   nuevo, que en la portada no cabe. */
+.portada__nota{
+  margin:32px 0 0; max-width:47ch;
+  padding-left:18px; border-left:1px solid rgba(190,142,90,.55);
+  font-family:var(--display); font-style:italic;
+  font-size:clamp(1.02rem,1.5vw,1.16rem); line-height:1.56;
+  color:rgba(242,237,228,.8);
+}
+.portada__nota em{ font-style:italic; color:var(--bronce) }
+
+/* Cierre de la portada: un hilo por el que baja una luz. Aquí antes había una
+   barra con las cuatro secciones numeradas, y no funcionaba: iba alineada con
+   el texto mientras la fila de paneles de debajo va a sangre, así que se veían
+   dos rejillas de cuatro seguidas y descuadradas entre sí. */
+.baja{
+  display:block; position:relative; overflow:hidden;
+  width:1px; height:66px; margin-top:38px;
+  background:rgba(242,237,228,.26);
+}
+.baja::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,transparent,var(--bronce) 45%,transparent);
+  animation:baja-luz 2.8s cubic-bezier(.65,0,.35,1) infinite;
+}
+@keyframes baja-luz{
+  0%{ transform:translateY(-100%) }
+  55%,100%{ transform:translateY(100%) }
+}
+
+/* ============================== SECCIONES ================================= */
+.seccion{ padding:var(--aire) 0 }
+
+.encabezado{ max-width:64ch; margin-bottom:clamp(44px,5vw,72px) }
+.titulo{
+  margin:22px 0 0;
+  font-size:clamp(2.05rem,3.9vw,3.15rem); line-height:1.06; color:var(--terracota);
+}
+.titulo--claro{ color:var(--crema) }
+.entradilla{ margin:22px 0 0; font-size:1.07rem; color:#4A423A; max-width:60ch }
+.encabezado--claro .entradilla{ color:rgba(242,237,228,.76) }
+
+/* ============================== PANELES =================================== */
+/* Cuatro fotos que se abren al pasar por encima. En móvil se apilan enteras,
+   porque ahí no hay «pasar por encima» que valga. */
+/* La altura no es libre: las fotos son 4:3 y en franjas altas y estrechas se
+   recortaban hasta dejar sin ver el motivo. Casi cuadradas se leen bien, y al
+   abrirse quedan apaisadas, que es como están hechas. */
+.paneles{ display:flex; height:clamp(300px,25vw,392px); background:var(--umbria) }
+.panel{
+  position:relative; flex:1; overflow:hidden; text-decoration:none;
+  border-right:1px solid rgba(242,237,228,.12);
+  transition:flex 1.05s var(--curva);
+}
+.panel:last-child{ border-right:0 }
+.panel img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  transform:scale(1.06); filter:saturate(.86) brightness(.72);
+  transition:transform 1.4s var(--curva), filter .8s;
+}
+.panel::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(36,21,17,.1) 30%,rgba(36,21,17,.86) 100%);
+}
+.panel__cuerpo{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  padding:30px clamp(20px,2.2vw,32px);
+  color:var(--crema);
+}
+.panel__cuerpo h3{
+  font-size:clamp(1.3rem,1.8vw,1.7rem);
+  transition:transform .7s var(--curva);
+}
+.panel__cuerpo p{
+  margin:12px 0 0; max-width:30ch;
+  font-size:.9rem; line-height:1.6; color:rgba(242,237,228,.76);
+  opacity:0; transform:translateY(12px);
+  transition:opacity .5s var(--curva), transform .6s var(--curva);
+}
+.panel__cuerpo::before{
+  content:''; display:block; width:0; height:1px; margin-bottom:18px;
+  background:var(--bronce);
+  transition:width .7s var(--curva);
+}
+@media (hover:hover) and (min-width:861px){
+  .paneles:hover .panel{ flex:.82 }
+  .panel:hover,.panel:focus-within{ flex:2.1 }
+  .panel:hover img,.panel:focus-within img{ transform:scale(1); filter:saturate(1) brightness(.85) }
+  .panel:hover .panel__cuerpo p,.panel:focus-within .panel__cuerpo p{ opacity:1; transform:none }
+  .panel:hover .panel__cuerpo::before,.panel:focus-within .panel__cuerpo::before{ width:52px }
+}
+
+/* ============================== SERVICIOS ================================= */
+.servicios{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--linea); border-left:1px solid var(--linea);
+}
+.servicio{
+  position:relative; padding:clamp(30px,3.2vw,44px);
+  border-right:1px solid var(--linea); border-bottom:1px solid var(--linea);
+  background:transparent;
+  transition:background .5s var(--curva);
+}
+.servicio::before{
+  content:''; position:absolute; left:0; top:0; width:100%; height:2px;
+  background:var(--terracota); transform:scaleX(0); transform-origin:left;
+  transition:transform .6s var(--curva);
+}
+.servicio:hover{ background:var(--cal) }
+.servicio:hover::before{ transform:scaleX(1) }
+.servicio h3{ font-size:1.32rem; color:var(--terracota) }
+.servicio p{ margin:14px 0 0; font-size:.965rem; color:#544B42 }
+
+/* =============================== POR QUÉ ================================== */
+/* El bloque grande de la página: fondo oscuro, titular a toda voz y las
+   cifras dentro, para que se lea como una sola declaración. */
+.porque{
+  position:relative; overflow:hidden;
+  background:var(--umbria); color:var(--crema);
+  padding:clamp(88px,10vw,150px) 0;
+}
+.porque__trama{
+  position:absolute; inset:0; pointer-events:none; opacity:.6;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 79px,rgba(242,237,228,.05) 79px 80px),
+    repeating-linear-gradient(0deg,transparent 0 79px,rgba(242,237,228,.035) 79px 80px);
+  mask-image:radial-gradient(120% 90% at 50% 0%,rgba(0,0,0,.85),transparent 72%);
+}
+.porque__marca{
+  position:absolute; right:-13%; top:-9%; width:min(56vw,640px); height:auto;
+  opacity:.045; pointer-events:none;
+}
+.porque .envoltura{ position:relative }
+
+/* el ancho se pone en el propio titular, no en el contenedor: `ch` se mide
+   con la letra del elemento y en la caja padre valdría un tercio de lo que
+   parece, partiendo el titular en diez líneas */
+.porque__titulo{
+  margin:26px 0 0; max-width:26ch;
+  font-size:clamp(2.5rem,6.4vw,5.2rem); line-height:1.01; letter-spacing:-.034em;
+}
+.porque__titulo em{
+  display:block; font-style:italic; color:var(--bronce);
+}
+.porque__bajada{
+  margin:30px 0 0; max-width:56ch;
+  font-size:1.08rem; color:rgba(242,237,228,.74);
+}
+
+.porque__cuerpo{
+  display:grid; grid-template-columns:.85fr 1.15fr; gap:clamp(34px,5vw,72px);
+  align-items:start; margin-top:clamp(56px,6vw,84px);
+}
+.porque__foto{ margin:0; position:relative }
+/* La foto es un retrato 4:5, la misma proporción del hueco, así que en
+   escritorio no se recorta nada. El encuadre se fija por la cara, no por el
+   centro geométrico: va en el tercio superior y con `50% 50%` quedaba
+   descabezada al pasar a apaisado. */
+.porque__foto img{
+  width:100%; aspect-ratio:4/5; object-fit:cover; object-position:50% 32%;
+  border-radius:2px; filter:sepia(.1) saturate(.95);
+}
+.porque__foto figcaption{
+  margin-top:16px;
+  font:italic 400 .9rem/1.6 var(--display); color:rgba(242,237,228,.55);
+}
+
+.pilares{ display:grid; gap:2px }
+.pilares li{
+  display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:start;
+  padding:26px 4px 26px 0;
+  border-bottom:1px solid var(--linea-clara);
+}
+.pilares li:first-child{ border-top:1px solid var(--linea-clara) }
+.pilar__num{
+  font:400 .78rem/1 var(--util); letter-spacing:.14em; color:var(--bronce);
+  padding-top:6px;
+}
+.pilares b{
+  display:block; font:400 1.32rem/1.25 var(--display); letter-spacing:-.01em;
+  color:var(--crema);
+}
+.pilares p{ margin:9px 0 0; font-size:.95rem; color:rgba(242,237,228,.66) }
+
+.cifras{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  margin-top:clamp(56px,6vw,88px);
+  border-top:1px solid var(--linea-clara);
+}
+.cifra{ padding:38px 20px 0; border-right:1px solid var(--linea-clara) }
+.cifra:last-child{ border-right:0 }
+.cifra:first-child{ padding-left:0 }
+.cifra b{
+  display:block; font:400 clamp(2.2rem,3.6vw,3rem)/1 var(--display);
+  color:var(--bronce); letter-spacing:-.02em;
+}
+.cifra span{
+  display:block; margin-top:12px;
+  font:400 .72rem var(--util); letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(242,237,228,.6);
+}
+
+/* ================================ OBRAS =================================== */
+.obra{
+  display:grid; grid-template-columns:1.08fr .92fr;
+  gap:clamp(30px,4.5vw,68px); align-items:center;
+  padding:clamp(38px,4.5vw,64px) 0;
+  border-top:1px solid var(--linea);
+}
+.obra--invertida .obra__foto{ order:2 }
+.obra__foto{ margin:0; overflow:hidden; border-radius:2px }
+.obra__foto img{
+  width:100%; aspect-ratio:4/3; object-fit:cover;
+  transform:scale(1.02);
+  transition:transform 1.3s var(--curva);
+}
+.obra:hover .obra__foto img{ transform:scale(1.08) }
+.obra__texto h3{ margin:20px 0 0; font-size:clamp(1.6rem,2.5vw,2.15rem); color:var(--terracota) }
+.obra__texto p{ margin:18px 0 0; color:#4F473F }
+.obra__ficha{
+  display:flex; flex-wrap:wrap; gap:0 clamp(24px,3vw,44px);
+  margin-top:30px; padding-top:24px; border-top:1px solid var(--linea);
+}
+.obra__ficha b{
+  display:block; font:400 1.5rem/1 var(--display); color:var(--umbria);
+}
+.obra__ficha span{
+  display:block; margin-top:8px;
+  font:400 .68rem var(--util); letter-spacing:.16em; text-transform:uppercase;
+  color:var(--tinta-sua);
+}
+
+/* ============================== COTIZADOR ================================= */
+.cotizador{
+  position:relative; overflow:hidden;
+  background:var(--umbria-2); color:var(--crema);
+  padding:var(--aire) 0;
+}
+.cotizador .envoltura{ position:relative }
+
+.caja-cot{
+  background:var(--cal); color:var(--tinta);
+  border-radius:3px; box-shadow:0 40px 90px -50px rgba(0,0,0,.85);
+  overflow:hidden;
+}
+
+.cot__barra{ height:3px; background:rgba(109,57,46,.12) }
+.cot__barra i{
+  display:block; height:100%; width:0;
+  background:linear-gradient(90deg,var(--terracota),var(--bronce));
+  transition:width .6s var(--curva);
+}
+.cot__cabeza{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:22px clamp(22px,3.4vw,46px);
+  border-bottom:1px solid var(--linea);
+}
+.cot__etapa{
+  font:400 .72rem var(--util); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--terracota);
+}
+.cot__cuenta{ font:500 .82rem var(--texto); color:var(--tinta-sua) }
+
+.cot__lienzo{ padding:clamp(30px,4vw,52px) clamp(22px,3.4vw,46px) }
+
+@keyframes cot-entra{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
+.cot__pantalla.activa{ animation:cot-entra .5s var(--curva) both }
+
+.cot__pregunta{
+  margin:0; font:400 clamp(1.35rem,2.2vw,1.85rem)/1.2 var(--display);
+  color:var(--terracota); letter-spacing:-.015em;
+}
+.cot__ayuda{ margin:12px 0 0; font-size:.95rem; color:var(--tinta-sua); max-width:62ch }
+
+/* un grupo de preguntas cortas que comparten pantalla */
+.cot__grupo{ margin-top:34px }
+.cot__grupo:first-child{ margin-top:0 }
+.cot__grupo > .cot__pregunta{ font-size:clamp(1.05rem,1.5vw,1.22rem) }
+
+.opciones{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-top:26px }
+.opciones--dos{ grid-template-columns:repeat(auto-fit,minmax(240px,1fr)) }
+
+.opcion{
+  position:relative; text-align:left; cursor:pointer;
+  padding:20px 46px 20px 20px;
+  background:#fff; border:1px solid var(--linea); border-radius:2px;
+  font:inherit; color:inherit;
+  transition:border-color .3s, transform .3s var(--curva), box-shadow .3s var(--curva), background .3s;
+}
+.opcion:hover{ border-color:var(--terracota); transform:translateY(-2px); box-shadow:0 12px 24px -18px rgba(36,21,17,.8) }
+.opcion b{ display:block; font:600 .95rem/1.35 var(--texto) }
+.opcion small{ display:block; margin-top:7px; font-size:.815rem; line-height:1.5; color:var(--tinta-sua) }
+.opcion svg{ width:30px; height:30px; margin-bottom:12px; fill:none; stroke:var(--terracota); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round }
+.opcion::after{
+  content:''; position:absolute; right:18px; top:22px;
+  width:15px; height:15px; border:1px solid var(--linea); border-radius:50%;
+  transition:border-color .3s, background .3s;
+}
+.opcion.sel{ border-color:var(--terracota); background:#fff; box-shadow:inset 0 0 0 1px var(--terracota) }
+.opcion.sel::after{
+  border-color:var(--terracota); background:var(--terracota);
+  box-shadow:inset 0 0 0 3px #fff;
+}
+
+.medida{ display:flex; align-items:center; gap:26px; margin-top:30px; flex-wrap:wrap }
+.medida input[type=range]{ flex:1; min-width:220px; accent-color:var(--terracota); height:4px }
+.medida__valor{ display:flex; align-items:baseline; gap:7px; color:var(--terracota) }
+.medida__valor span{ font:400 2.6rem/1 var(--display) }
+.medida__valor small{ font:400 .8rem var(--util); letter-spacing:.1em }
+
+.campo{ margin-top:22px }
+.campo label,.campo__rotulo{
+  display:block; margin-bottom:9px;
+  font:600 .8rem var(--texto); letter-spacing:.02em; color:var(--tinta);
+}
+.campo input,.campo textarea,.campo select{
+  width:100%; padding:13px 15px; border:1px solid var(--linea); border-radius:2px;
+  background:#fff; font:inherit; font-size:.95rem; color:var(--tinta);
+  transition:border-color .25s, box-shadow .25s;
+}
+.campo select{ appearance:none; padding-right:40px; cursor:pointer;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%236D392E' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center / 16px }
+.campo .campo__opcional{ display:inline; margin:0; font-weight:400; color:var(--tinta-sua) }
+.campo input:focus,.campo textarea:focus,.campo select:focus{
+  outline:0; border-color:var(--terracota); box-shadow:0 0 0 3px rgba(109,57,46,.1);
+}
+.campo textarea{ min-height:96px; resize:vertical; line-height:1.6 }
+.campo small{ display:block; margin-top:8px; font-size:.8rem; color:var(--tinta-sua) }
+
+.detectado{ display:flex; flex-wrap:wrap; gap:8px; margin-top:22px }
+.etiqueta{
+  display:inline-block; padding:6px 13px; border-radius:100px;
+  background:rgba(109,57,46,.1); color:var(--terracota);
+  font:600 .78rem var(--texto);
+}
+.etiqueta--gris{ background:rgba(46,42,38,.07); color:var(--tinta-sua) }
+
+.cot__navegacion{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:20px clamp(22px,3.4vw,46px); border-top:1px solid var(--linea);
+  background:rgba(109,57,46,.035);
+}
+.cot__navegacion .btn:disabled{ opacity:.35; cursor:not-allowed; transform:none }
+.cot__navegacion .btn:disabled::before{ transform:translateY(101%) }
+
+/* resultado */
+.resultado{ text-align:center }
+.resultado__rotulo{
+  margin:0; font:400 .72rem var(--util); letter-spacing:.2em; text-transform:uppercase;
+  color:var(--tinta-sua);
+}
+.resultado__cifra{
+  margin:14px 0 0;
+  font:400 clamp(3rem,7.5vw,4.9rem)/1 var(--display);
+  color:var(--terracota); letter-spacing:-.035em;
+}
+.resultado__iva{ margin:14px 0 0; font-size:.86rem; color:var(--tinta-sua) }
+.resultado__resumen{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:0;
+  margin:34px 0; padding:22px 0; border-block:1px solid var(--linea);
+}
+.resultado__resumen > div{ padding:0 clamp(18px,3vw,34px); text-align:center }
+.resultado__resumen span{
+  display:block; font:400 .68rem var(--util); letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tinta-sua);
+}
+.resultado__resumen b{ display:block; margin-top:7px; font:400 1.15rem var(--display) }
+.resultado__nota{
+  max-width:62ch; margin:0 auto 16px; padding:18px 22px;
+  background:rgba(109,57,46,.055); border-left:2px solid var(--bronce); border-radius:2px;
+  font-size:.9rem; line-height:1.65; text-align:left; color:#4F473F;
+}
+.resultado__acciones{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:28px;
+}
+
+/* «¿Prefieres que te llamemos?», debajo del precio y nunca antes. Va en
+   recuadro tenue y con el botón de línea, no con el de terracota: es una
+   opción más, no la acción principal de la pantalla. Si compitiera de tú a tú
+   con el botón de WhatsApp, se perderían los dos. */
+.recogida{
+  max-width:62ch; margin:26px auto 0; padding:24px 26px; text-align:left;
+  background:#fff; border:1px solid var(--linea); border-radius:3px;
+}
+.recogida__titulo{
+  margin:0; font:400 1.15rem/1.3 var(--display); color:var(--tinta);
+}
+.recogida__ayuda{ margin:8px 0 20px; font-size:.86rem; line-height:1.6; color:var(--tinta-sua) }
+.recogida__par{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
+.recogida .consentimiento{ margin-top:18px }
+.recogida .btn{ margin-top:20px }
+/* LA OTRA PUERTA, debajo del formulario de datos. Se alinea con el recuadro de
+   arriba —misma anchura y el mismo centrado— porque suelta debajo quedaba
+   descolgada a la izquierda y parecía un error. La raya de arriba la separa del
+   formulario sin meter otra caja. */
+.cot__otra-via{
+  max-width:62ch; margin:26px auto 0; padding-top:22px; text-align:center;
+  border-top:1px solid var(--linea);
+}
+.cot__otra-via p{
+  margin:0 auto 16px; max-width:46ch;
+  font-size:.86rem; line-height:1.6; color:var(--tinta-sua);
+}
+
+.recogida__gracias{
+  margin:0; padding:6px 0; font:400 1.05rem var(--display); color:var(--terracota);
+}
+@media (max-width:560px){
+  .recogida__par{ grid-template-columns:1fr }
+}
+
+/* =============================== CONTACTO ================================= */
+.contacto__caja{ display:grid; grid-template-columns:.85fr 1.15fr; gap:clamp(34px,5vw,70px) }
+.dato{ display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--linea) }
+.dato:first-child{ border-top:1px solid var(--linea) }
+.dato svg{ width:22px; height:22px; flex:none; margin-top:4px; fill:none; stroke:var(--terracota); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round }
+.dato span{
+  display:block; font:400 .68rem var(--util); letter-spacing:.16em; text-transform:uppercase;
+  color:var(--tinta-sua);
+}
+.dato a,.dato p{
+  display:block; margin:8px 0 0; font:400 1.22rem var(--display); color:var(--terracota);
+  text-decoration:none; transition:color .25s;
+}
+.dato a:hover{ color:var(--umbria) }
+.dato small{ display:block; margin-top:6px; font-size:.83rem; color:var(--tinta-sua) }
+
+.redes{ display:flex; gap:10px; margin-top:28px }
+.redes a{
+  display:grid; place-items:center; width:44px; height:44px; border-radius:50%;
+  border:1px solid var(--linea); color:var(--terracota);
+  transition:background .3s, color .3s, transform .3s var(--curva), border-color .3s;
+}
+.redes a:hover{ background:var(--terracota); color:var(--crema); border-color:var(--terracota); transform:translateY(-3px) }
+.redes svg{ width:17px; height:17px; fill:currentColor }
+
+.formulario{
+  background:var(--cal); padding:clamp(26px,3.4vw,42px);
+  border:1px solid var(--linea); border-radius:3px;
+}
+.formulario__par{ display:grid; grid-template-columns:1fr 1fr; gap:18px }
+.formulario .campo:first-child{ margin-top:0 }
+.formulario__par .campo{ margin-top:0 }
+.formulario__par + .formulario__par{ margin-top:22px }
+@media (max-width:640px){ .formulario__par + .formulario__par{ margin-top:18px } }
+.consentimiento{ display:flex; gap:12px; margin-top:22px; font-size:.84rem; line-height:1.6; color:var(--tinta-sua) }
+.consentimiento input{ margin-top:4px; accent-color:var(--terracota); flex:none }
+.consentimiento a{ color:var(--terracota) }
+/* Los tres botones, centrados. Con `justify-content` por defecto quedaban
+   pegados a la izquierda y, cuando el tercero no cabía, caía solo en una
+   segunda línea descolgado: dos arriba y uno abajo a la izquierda. Centrados,
+   quepan en una fila o en dos, siempre se leen como un grupo. */
+.formulario__botones{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:26px;
+}
+.aviso-envio{
+  margin:18px auto 0; max-width:62ch; text-align:center;
+  font-size:.8rem; line-height:1.6; color:var(--tinta-sua);
+}
+
+/* El acuse de «te llamamos nosotros». Es lo único que ve quien usa ese botón:
+   no se le abre ninguna aplicación, así que si esto no estuviera no sabría si
+   ha funcionado y volvería a pulsar. */
+.formulario__hecho{
+  margin:22px 0 0; padding:14px 18px;
+  background:var(--crema-sua, #F6F1E8); border-left:3px solid var(--terracota);
+  font:400 1rem/1.5 var(--display); color:var(--tinta);
+}
+
+.formulario__cabeza{
+  margin:0 0 24px; font:400 1.15rem/1.45 var(--display); color:var(--tinta);
+}
+.formulario__cabeza b{ font-weight:400; color:var(--terracota) }
+.formulario__botones .btn{ min-width:220px; justify-content:center }
+
+/* ===================== LLAMADAS A LA ACCIÓN INTERMEDIAS ==================== */
+/* Al final de cada sección larga, la misma pregunta: quien ya se ha convencido
+   a mitad de página no tiene que bajar hasta el formulario para decirlo. */
+.llamada{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px 34px;
+  margin-top:clamp(40px,5vw,64px); padding:clamp(22px,3vw,32px) clamp(22px,3.4vw,40px);
+  background:var(--cal); border:1px solid var(--linea); border-left:3px solid var(--terracota); border-radius:3px;
+}
+.llamada p{ margin:0; flex:1 1 380px; font-size:1rem; line-height:1.6; color:var(--tinta-sua) }
+.llamada p b{ display:block; margin-top:4px; font:400 1.2rem/1.4 var(--display); color:var(--tinta) }
+.llamada__botones{ display:flex; flex-wrap:wrap; gap:12px }
+.llamada--oscura{ justify-content:center; background:none; border:0; padding:0 }
+
+/* La salida del cotizador, en claro sobre el fondo oscuro de la sección. */
+.cot__atajo{
+  margin:22px auto 0; max-width:62ch; text-align:center;
+  font-size:.92rem; line-height:1.6; color:rgba(242,237,228,.78);
+}
+.cot__atajo a{ color:var(--bronce); font-weight:600 }
+
+/* ================================ RESEÑAS ================================= */
+/* Lo que escriben los clientes en Google. La sección entera nace con `hidden` y
+   solo la destapa el JavaScript si hay reseñas: una página de opiniones vacía
+   dice más de lo que calla. */
+.resenas{ background:var(--cal) }
+
+/* La nota media, en una línea y en grande. Las estrellas van en color bronce
+   porque el terracota de la marca sobre crema no tiene bastante contraste a
+   ese tamaño, y una estrella que no se ve no cuenta nada. */
+.resenas__nota{
+  display:flex; align-items:baseline; justify-content:center; flex-wrap:wrap;
+  gap:4px 14px; margin:0 0 42px; text-align:center;
+}
+.resenas__nota b{ font:400 2.6rem/1 var(--display); color:var(--tinta) }
+.resenas__nota a{ color:var(--tinta-sua); font-size:.9rem; text-decoration:none; border-bottom:1px solid var(--linea) }
+.resenas__nota a:hover{ color:var(--terracota) }
+.resenas__barras{ color:var(--bronce); letter-spacing:.14em; font-size:1.15rem }
+
+/* Columnas que se deshacen solas: con dos reseñas no se ven dos huecos vacíos
+   al lado, y con seis no se aprietan. */
+.resenas__lista{
+  display:grid; gap:20px; align-items:start;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+}
+.resena{
+  background:#fff; border:1px solid var(--linea); border-radius:3px;
+  padding:26px 28px;
+}
+.resena__quien{ display:flex; align-items:center; gap:14px; margin-bottom:16px }
+/* La inicial en vez de la foto de Google: se lee igual y no manda al visitante
+   a los servidores de Google antes de que haya aceptado nada. */
+.resena__inicial{
+  flex:none; width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--crema); color:var(--terracota);
+  font:400 1.25rem var(--display);
+}
+.resena__autor{ display:block; font:600 .95rem var(--texto); color:var(--tinta) }
+.resena__meta{ display:block; margin-top:3px; font-size:.8rem; color:var(--tinta-sua) }
+.resena__meta .resenas__barras{ font-size:.9rem; letter-spacing:.08em }
+.resena__texto{
+  margin:0; font-size:.95rem; line-height:1.7; color:var(--tinta-sua);
+  white-space:pre-line;          /* los saltos que escribió el cliente */
+}
+
+/* La contestación de la empresa, dentro de la misma tarjeta y en segundo
+   plano: la reseña es del cliente y es la que manda. */
+.resena__respuesta{
+  margin-top:16px; padding:14px 16px; border-left:2px solid var(--linea);
+  background:var(--cal);
+}
+.resena__respuesta b{
+  display:block; margin-bottom:5px;
+  font:600 .72rem var(--util); letter-spacing:.1em; text-transform:uppercase; color:var(--terracota);
+}
+.resena__respuesta p{ margin:0; font-size:.88rem; line-height:1.6; color:var(--tinta-sua) }
+
+@media (max-width:620px){
+  .resenas__nota b{ font-size:2.1rem }
+  .resena{ padding:22px 20px }
+}
+
+/* ================================= EMPLEO ================================= */
+/* Franja de cierre antes del pie. No lleva foto: en toda la web las fotos son
+   de casas terminadas y aquí una foto de plantilla posando sonaría a otra
+   empresa. Fondo «cal» para que se despegue del crema del contacto sin abrir
+   otra banda oscura justo encima del pie, que ya lo es. */
+.empleo{ background:var(--cal); border-top:1px solid var(--linea); padding:clamp(56px,6vw,88px) 0 }
+.empleo__caja{
+  display:grid; grid-template-columns:1.35fr .65fr; align-items:center;
+  gap:clamp(30px,5vw,64px);
+}
+.empleo__titulo{
+  margin:20px 0 0;
+  font-size:clamp(1.7rem,2.9vw,2.35rem); line-height:1.1; color:var(--terracota);
+}
+.empleo__texto p{ margin:18px 0 0; max-width:58ch; color:#4A423A }
+.empleo__nota{ font-size:.93rem; color:var(--tinta-sua) }
+.empleo__accion{ display:flex; flex-direction:column; align-items:flex-start; gap:14px }
+.empleo__correo{ margin:0; font-size:.86rem; color:var(--tinta-sua) }
+.empleo__correo a{ color:var(--terracota); text-decoration:none; border-bottom:1px solid var(--linea) }
+.empleo__correo a:hover{ border-bottom-color:var(--terracota) }
+
+/* ================================== PIE =================================== */
+.pie{ background:var(--umbria); color:rgba(242,237,228,.7); padding:clamp(56px,6vw,84px) 0 26px }
+.pie__rejilla{
+  display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:clamp(28px,4vw,54px);
+  padding-bottom:44px; border-bottom:1px solid var(--linea-clara);
+}
+.pie__marca img{ width:76px; height:76px; object-fit:contain; margin-bottom:18px }
+.pie__marca p{ margin:0 0 8px; font-size:.9rem }
+/* el lema de la casa, en la letra del titular y en cursiva: es la firma, no
+   una línea más de la descripción */
+.pie__marca .pie__lema{
+  margin-bottom:14px;
+  font-family:var(--display); font-style:italic; font-size:1.14rem;
+  line-height:1.25; color:var(--bronce);
+}
+.pie__razon{ font:400 .78rem var(--util); letter-spacing:.1em; color:rgba(242,237,228,.45) }
+.pie__redes{ display:flex; gap:8px; margin-top:20px }
+.pie__redes a{
+  display:grid; place-items:center; width:38px; height:38px; border-radius:50%;
+  border:1px solid var(--linea-clara); transition:background .3s, color .3s, transform .3s var(--curva);
+}
+.pie__redes a:hover{ background:var(--bronce); color:var(--umbria); transform:translateY(-3px) }
+.pie__redes svg{ width:15px; height:15px; fill:currentColor }
+.pie h4{
+  margin-bottom:18px; font:400 .72rem var(--util); letter-spacing:.18em;
+  text-transform:uppercase; color:var(--bronce);
+}
+.pie li{ margin-bottom:11px }
+.pie li a{ text-decoration:none; font-size:.9rem; transition:color .25s }
+.pie li a:hover{ color:var(--crema) }
+.pie__legal{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:14px; padding-top:24px; font-size:.78rem; color:rgba(242,237,228,.45);
+}
+.pie__legal nav{ display:flex; flex-wrap:wrap; gap:22px }
+.pie__legal a{ text-decoration:none; transition:color .25s }
+.pie__legal a:hover{ color:var(--bronce) }
+
+/* ============================== PÁGINA LEGAL ==============================
+   Los textos legales son de las pocas cosas de la web que se leen de arriba
+   abajo y con atención, así que aquí manda la legibilidad: una sola columna
+   estrecha, cuerpo algo mayor y aire entre apartados. La marca aparece lo
+   justo para que se note que sigues en la misma casa. */
+.legal{ background:var(--cal) }
+.legal__cabecera{ padding:22px 0; border-bottom:1px solid var(--linea) }
+.legal__volver{
+  display:inline-flex; align-items:center; gap:14px; text-decoration:none;
+  font:400 .74rem var(--util); letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tinta-sua); transition:color .25s;
+}
+.legal__volver:hover{ color:var(--terracota) }
+.legal__volver img{ width:42px; height:42px; object-fit:contain }
+
+.legal__cuerpo{ max-width:74ch; padding-block:clamp(44px,6vw,78px) clamp(60px,8vw,100px) }
+.legal__rotulo{ color:var(--bronce) }
+.legal__titulo{
+  margin:18px 0 0; font:400 clamp(1.9rem,4vw,2.7rem)/1.12 var(--display);
+  letter-spacing:-.02em; color:var(--tinta);
+}
+.legal__fecha{ margin:14px 0 0; font-size:.84rem; color:var(--tinta-sua) }
+
+.legal__indice{
+  display:flex; flex-wrap:wrap; gap:10px; margin:34px 0 0;
+  padding:20px 0; border-block:1px solid var(--linea);
+}
+.legal__indice a{
+  padding:8px 16px; border:1px solid var(--linea); border-radius:100px;
+  font:400 .76rem var(--util); letter-spacing:.06em; color:var(--tinta);
+  text-decoration:none; transition:background .25s, border-color .25s, color .25s;
+}
+.legal__indice a:hover{ background:var(--terracota); border-color:var(--terracota); color:var(--crema) }
+
+/* el desplazamiento deja hueco arriba para que el titular no quede pegado al
+   borde al saltar desde el índice o desde el pie de la web */
+.legal__seccion{ scroll-margin-top:24px; padding-top:clamp(40px,5vw,64px) }
+.legal__seccion h2{
+  margin:0 0 8px; font:400 clamp(1.5rem,2.8vw,2rem)/1.2 var(--display); color:var(--terracota);
+}
+.legal__seccion h3{
+  margin:34px 0 10px; font:600 1.02rem var(--texto); color:var(--tinta);
+}
+.legal__seccion h4{
+  margin:22px 0 8px; font:600 .92rem var(--texto); color:var(--tinta);
+}
+.legal__seccion p{ margin:0 0 14px; font-size:.95rem; line-height:1.75; color:#4A443D }
+.legal__seccion ul{ margin:0 0 18px; padding-left:22px; list-style:disc }
+.legal__seccion li{ margin-bottom:9px; font-size:.95rem; line-height:1.7; color:#4A443D }
+.legal__seccion strong{ color:var(--tinta) }
+.legal__seccion a{ color:var(--terracota) }
+
+.legal__datos{
+  display:grid; grid-template-columns:auto 1fr; gap:9px 26px;
+  margin:0 0 18px; padding:22px 24px; background:#fff; border:1px solid var(--linea); border-radius:3px;
+}
+.legal__datos dt{ font:400 .68rem var(--util); letter-spacing:.14em; text-transform:uppercase; color:var(--tinta-sua) }
+.legal__datos dd{ margin:0; font-size:.93rem; color:var(--tinta) }
+
+.legal__nota{
+  padding:16px 20px; background:rgba(109,57,46,.055);
+  border-left:2px solid var(--bronce); border-radius:2px;
+  font-size:.88rem !important; line-height:1.65;
+}
+
+.legal__tabla{ width:100%; border-collapse:collapse; margin:0 0 18px; font-size:.9rem }
+.legal__tabla th{
+  padding:11px 14px; background:var(--umbria); color:var(--crema); text-align:left;
+  font:400 .68rem var(--util); letter-spacing:.12em; text-transform:uppercase;
+}
+.legal__tabla td{ padding:12px 14px; border-top:1px solid var(--linea); vertical-align:top; line-height:1.6; color:#4A443D }
+
+.legal__pie{
+  margin:clamp(48px,6vw,72px) 0 0; padding-top:26px; border-top:1px solid var(--linea);
+  font-size:.92rem; color:var(--tinta-sua);
+}
+.pie--simple{ padding:26px 0 22px }
+.pie--simple .pie__legal{ padding-top:0 }
+
+@media (max-width:560px){
+  .legal__datos{ grid-template-columns:1fr; gap:3px 0 }
+  .legal__datos dd{ margin-bottom:12px }
+  /* una tabla de dos columnas no cabe en 375 px sin apretujar el texto: se
+     apila y cada fila se lee como un bloque */
+  .legal__tabla, .legal__tabla tbody, .legal__tabla tr, .legal__tabla td{ display:block; width:100% }
+  .legal__tabla thead{ display:none }
+  .legal__tabla tr{ margin-bottom:16px; border:1px solid var(--linea); border-radius:3px; background:#fff }
+  .legal__tabla td{ border-top:0 }
+  .legal__tabla td + td{ border-top:1px solid var(--linea); font-size:.85rem; color:var(--tinta-sua) }
+}
+
+/* ============================ WHATSAPP FLOTANTE =========================== */
+/* Siempre en pantalla, desde el primer segundo y en todas las medidas: es el
+   camino más corto para que quien llega de un anuncio o de redes escriba. */
+.wa-flota{
+  position:fixed; right:24px; bottom:24px; z-index:110;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:15px 24px; border-radius:100px;
+  background:var(--wa); color:#fff; text-decoration:none;
+  font:600 .95rem var(--texto);
+  box-shadow:0 16px 34px -14px rgba(31,168,85,.75), 0 2px 6px rgba(0,0,0,.18);
+  transition:transform .3s var(--curva);
+}
+.wa-flota:hover{ transform:translateY(-3px) }
+.wa-flota:focus-visible{ outline:3px solid var(--bronce); outline-offset:3px }
+.wa-flota svg{ width:20px; height:20px; fill:currentColor }
+
+/* ============================== ANIMACIONES =============================== */
+@keyframes entra{
+  from{ opacity:0; transform:translateY(26px) }
+  to{ opacity:1; transform:none }
+}
+/* Todo lo que anima parte de invisible, así que se condiciona a `.js`: si el
+   script no llega a ejecutarse, la página se ve entera y quieta en vez de en
+   blanco. La clase la pone un script de una línea en el <head>. */
+.js [data-entra]{ opacity:0; animation:entra .95s var(--curva) both }
+
+.js [data-revela]{
+  opacity:0; transform:translateY(34px);
+  transition:opacity .85s var(--curva), transform .95s var(--curva);
+}
+.js [data-revela="izq"]{ transform:translateX(-38px) }
+.js [data-revela="der"]{ transform:translateX(38px) }
+.js [data-revela="zoom"]{ transform:scale(.965) }
+.js [data-revela].visto{ opacity:1; transform:none }
+
+/* la cota se dibuja al aparecer */
+.js [data-revela] .cota::before,.js .cota[data-revela]::before{ transform:scaleX(0); transition:transform .8s .15s var(--curva) }
+.js [data-revela].visto .cota::before,.js .cota[data-revela].visto::before{ transform:scaleX(1) }
+
+/* ============================== RESPONSIVE ================================ */
+@media (max-width:1080px){
+  /* Con «Trabaja con nosotros» el menú pasó a seis enlaces más el botón, y
+     entre 1080 y 860 px —que es donde todavía no ha aparecido la hamburguesa—
+     no cabía en una línea. Se aprieta el paso y se reduce el cuerpo; el orden
+     de los enlaces no se toca. */
+  .menu{ gap:22px }
+  .menu a:not(.btn){ font-size:.83rem }
+  .menu .btn--peq{ padding:11px 16px; font-size:.76rem }
+
+  .porque__cuerpo{ grid-template-columns:1fr; gap:44px }
+  .porque__foto img{ aspect-ratio:3/2; object-position:50% 22% }
+  .porque__cabeza{ max-width:none }
+  .contacto__caja{ grid-template-columns:1fr }
+  .empleo__caja{ grid-template-columns:1fr; align-items:start }
+  .servicios{ grid-template-columns:repeat(2,1fr) }
+  .pie__rejilla{ grid-template-columns:1fr 1fr }
+}
+
+@media (max-width:900px){
+  .portada{ min-height:clamp(500px,78vh,720px) }
+  .portada__caja{ max-width:none }
+  /* en vertical el degradado tiene que venir de abajo, no de la izquierda.
+     Aquí el recorte cae sobre el sofá, que es lo más claro de la foto, así que
+     el velo es algo más denso que en escritorio: aun así el texto queda en
+     8,4:1 y la foto se sigue viendo. */
+  .portada__velo{
+    background:
+      linear-gradient(180deg, rgba(22,12,9,.52) 0%, rgba(22,12,9,.42) 26%, rgba(22,12,9,.72) 88%),
+      linear-gradient(0deg, rgba(22,12,9,.5) 0%, rgba(22,12,9,0) 62%);
+  }
+  .obra,.obra--invertida{ grid-template-columns:1fr; gap:26px }
+  .obra--invertida .obra__foto{ order:0 }
+}
+
+@media (max-width:860px){
+  /* En la barra de arriba se queda solo el teléfono, que es lo que se pulsa
+     desde un móvil. El selector va completo a propósito: `.barra-sup a` son
+     dos partes y le gana a una sola clase, así que con `.barra-sup__correo` a
+     secas el display:inline-flex de arriba se imponía, el correo seguía
+     saliendo y partía la barra en dos líneas. */
+  .barra-sup .barra-sup__correo{ display:none }
+  .barra-sup__datos{ flex-wrap:nowrap }
+
+  /* CUIDADO AL TOCAR ESTO. El menú de abajo es `position:fixed`, y cualquier
+     ancestro con `backdrop-filter` —o con `transform`, o `filter`— pasa a ser
+     su marco de referencia en lugar de la pantalla. Con el desenfoque puesto,
+     el cajón se dimensionaba contra la cabecera, de 90 px de alto, y los
+     enlaces se derramaban por encima de la portada. En móvil el fondo sólido
+     se lee igual de bien, así que aquí el desenfoque sobra. */
+  .cabecera{ backdrop-filter:none; background:var(--crema) }
+  .cabecera.encogida{ background:var(--crema) }
+
+  /* El botón va DESPUÉS del cajón en el HTML, así que sin z-index el propio
+     menú tapaba la aspa de cerrarlo. */
+  .hamburguesa{ display:block; position:relative; z-index:2 }
+  .menu{
+    position:fixed; inset:0 0 0 auto; width:min(86vw,340px); z-index:1;
+    flex-direction:column; align-items:flex-start; justify-content:center;
+    gap:8px; padding:96px 34px 40px; overflow-y:auto;
+    background:var(--crema); border-left:1px solid var(--linea);
+    box-shadow:-30px 0 70px -40px rgba(36,21,17,.7);
+    transform:translateX(102%);
+    transition:transform .55s var(--curva);
+  }
+  .menu.abierto{ transform:none }
+  /* con el cajón abierto, la página de detrás no se mueve */
+  body.menu-abierto{ overflow:hidden }
+  .menu a:not(.btn){ font-size:1.35rem; font-family:var(--display); padding:12px 0; width:100% }
+  .menu .btn{ margin-top:20px; width:100% }
+
+  .paneles{ display:grid; grid-template-columns:1fr 1fr; height:auto }
+  .panel{ aspect-ratio:4/3; border-right:0; border-bottom:1px solid rgba(242,237,228,.12) }
+  .panel img{ transform:scale(1); filter:saturate(.95) brightness(.8) }
+  .panel__cuerpo p{ opacity:1; transform:none }
+  .panel__cuerpo::before{ width:40px }
+
+  .cifras{ grid-template-columns:1fr 1fr }
+  .cifra{ padding:28px 16px 28px 0; border-bottom:1px solid var(--linea-clara) }
+  .cifra:nth-child(2n){ border-right:0; padding-right:0 }
+  .cifra:nth-child(2n+1){ padding-left:0 }
+}
+
+@media (max-width:640px){
+  body{ font-size:1rem }
+  .servicios{ grid-template-columns:1fr }
+  .paneles{ grid-template-columns:1fr }
+  .panel{ aspect-ratio:3/2 }
+  .formulario__par{ grid-template-columns:1fr }
+  /* En el móvil los tres botones van uno debajo de otro y a todo lo ancho: en
+     fila quedan tres cajas estrechas con el texto partido en tres renglones. */
+  .formulario__botones{ flex-direction:column }
+  .formulario__botones .btn{ width:100% }
+  .llamada__botones, .llamada__botones .btn{ width:100%; justify-content:center }
+  .pie__rejilla{ grid-template-columns:1fr }
+  .obra__ficha{ gap:0 26px }
+  .resultado__resumen{ flex-direction:column; gap:16px }
+  .resultado__acciones .btn{ width:100% }
+  /* en el móvil, con el texto: un círculo verde suelto se confunde con un
+     adorno; «WhatsApp» escrito no deja dudas. El pie deja hueco para que el
+     botón no tape los últimos enlaces. */
+  .wa-flota{ right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); padding:14px 20px }
+  .pie{ padding-bottom:96px }
+  .baja{ display:none }
+}
+
+/* ========================= MOVIMIENTO REDUCIDO ============================ */
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  *,*::before,*::after{
+    animation-duration:.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .js [data-entra],.js [data-revela]{ opacity:1; transform:none; animation:none }
+  .panel__cuerpo p{ opacity:1; transform:none }
+}
+
+/* =============================== COOKIES ================================== */
+/* El cartel de consentimiento (cookies.js). Abajo a la izquierda y pequeño:
+   no tapa la portada ni el botón de WhatsApp. Aceptar y Rechazar con el
+   mismo peso, como pide la AEPD. */
+.cookies{
+  position:fixed; left:20px; bottom:20px; z-index:100;
+  max-width:420px; padding:20px 22px;
+  background:var(--umbria); color:var(--crema);
+  border-radius:4px; box-shadow:var(--sombra);
+  font:400 .88rem/1.6 var(--texto);
+}
+.cookies p{ margin:0 0 14px }
+.cookies a{ color:var(--bronce) }
+.cookies__botones{ display:flex; gap:10px }
+.cookies__botones .btn{ flex:1; justify-content:center }
+.cookies[hidden]{ display:none }
+/* En pantalla ancha, franja baja de una línea: en forma de caja tapaba el
+   «Calcular mi precio» de la portada justo cuando llega el visitante. Deja la
+   esquina derecha libre para el botón de WhatsApp. */
+@media (min-width:900px){
+  .cookies{ right:220px; max-width:none; display:flex; align-items:center; gap:24px; padding:12px 20px }
+  .cookies p{ margin:0; flex:1 }
+  .cookies__botones .btn{ flex:none; white-space:nowrap }
+}
+@media (max-width:560px){
+  /* en el móvil el cartel ocupa el ancho y se apoya encima del botón de
+     WhatsApp, que sigue a la vista mientras se decide */
+  .cookies{ left:16px; right:16px; bottom:84px; max-width:none; padding:14px 16px; font-size:.8rem; line-height:1.5 }
+  .cookies p{ margin-bottom:10px }
+  .cookies__botones .btn{ padding:10px 14px }
+}
+
+/* ======================= PÁGINAS DE SERVICIO (9-10-2026) ===================
+   Reformas en Mérida, baño, cocina e integral. Comparten cabecera, contacto y
+   pie con la portada (los genera paginas.py a partir de index.html); aquí solo
+   va lo que la portada no tiene: cabecera de página, texto largo y preguntas. */
+.servicios__mas{ margin:30px 0 0; font-size:.95rem; color:#544B42 }
+.servicios__mas a{ color:var(--terracota) }
+
+.pagina-cab{ padding:clamp(44px,6vw,84px) 0 clamp(28px,3vw,44px) }
+.migas{ font:400 .8rem var(--util); letter-spacing:.04em; color:#7A6F64 }
+.migas a{ color:inherit }
+.pagina-cab .titulo{ max-width:20ch }
+.pagina-cab__botones{ display:flex; flex-wrap:wrap; gap:12px; margin-top:30px }
+
+.pagina-foto{ margin:0 }
+.pagina-foto img{ width:100%; aspect-ratio:16/7; object-fit:cover; border-radius:2px }
+
+.pagina-texto{ max-width:72ch }
+.pagina-texto > p:first-child{ margin-top:0 }
+.pagina-texto h2{ margin:clamp(44px,5vw,64px) 0 0; font-size:clamp(1.6rem,2.6vw,2.15rem); line-height:1.12; color:var(--terracota) }
+.pagina-texto p, .pagina-texto ul{ margin:18px 0 0; color:#4A423A; line-height:1.72 }
+.pagina-texto ul{ padding-left:1.15em }
+.pagina-texto li + li{ margin-top:6px }
+.pagina-texto a{ color:var(--terracota) }
+
+.preguntas{ max-width:72ch; margin-top:clamp(48px,6vw,80px) }
+.preguntas h2{ font-size:clamp(1.6rem,2.6vw,2.15rem); color:var(--terracota); margin:0 0 18px }
+.preguntas details{ border-top:1px solid var(--linea); padding:18px 0 }
+.preguntas details:last-of-type{ border-bottom:1px solid var(--linea) }
+.preguntas summary{ cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:18px; font:400 1.12rem/1.4 var(--display); color:var(--tinta) }
+.preguntas summary::-webkit-details-marker{ display:none }
+.preguntas summary::after{ content:'+'; color:var(--terracota); font-size:1.3rem; line-height:1 }
+.preguntas details[open] summary::after{ content:'–' }
+.preguntas details p{ margin:12px 0 0; color:#4A423A; line-height:1.72 }
